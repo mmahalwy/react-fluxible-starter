@@ -20,12 +20,9 @@ import FluxibleComponent from 'fluxible-addons-react/FluxibleComponent';
 import createLocation from 'history/lib/createLocation'
 import { Router, RoutingContext, match, createRoutes } from 'react-router'
 
-
-var navigateAction = require('actions/navigate');
-
 import app from './app';
+import navigateAction from 'actions/navigate';
 import HtmlComponent from 'components/Html';
-
 import Routes from 'configs/Routes'
 const htmlComponent = React.createFactory(HtmlComponent);
 
