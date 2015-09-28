@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'fluxible-router';
+import { link } from 'react-router';
 
 class Nav extends React.Component {
   render() {
@@ -10,16 +10,16 @@ class Nav extends React.Component {
       var className = '';
       var link = links[name];
 
-      if (selected === name) {
-        className = 'pure-menu-selected';
-      }
-
-      return (
-        <li className={className} key={link.path}>
-          <NavLink routeName={link.page} activeStyle={{backgroundColor: '#eee'}}>{link.title}</NavLink>
-        </li>
-      );
-    });
+            if (selected === name) {
+                className = 'pure-menu-selected';
+            }
+            return;
+            // return (
+            //     <li className={className} key={link}>
+            //         <NavLink routeName={link.page} activeStyle={{backgroundColor: '#eee'}}>{link.title}</NavLink>
+            //     </li>
+            // );
+        });
 
     return (
       <ul className="pure-menu pure-menu-open pure-menu-horizontal">
