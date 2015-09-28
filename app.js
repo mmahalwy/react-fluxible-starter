@@ -4,9 +4,7 @@ import Routes from 'configs/Routes';
 import ApplicationStore from 'stores/ApplicationStore';
 
 // create new fluxible instance
-const app = new Fluxible({
-    component: Routes
-});
+const app = new Fluxible({});
 
 // register stores
 app.registerStore(ApplicationStore);

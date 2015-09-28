@@ -15,20 +15,19 @@ import logger from 'morgan';
 
 // React
 import React from 'react';
-// import {navigateAction} from 'fluxible-router';
+import { createElementWithContext } from 'fluxible-addons-react';
+import FluxibleComponent from 'fluxible-addons-react/FluxibleComponent';
+import createLocation from 'history/lib/createLocation'
+import { Router, RoutingContext, match, createRoutes } from 'react-router'
+
 
 var navigateAction = require('actions/navigate');
 
 import app from './app';
 import HtmlComponent from 'components/Html';
-import { createElementWithContext } from 'fluxible-addons-react';
-const htmlComponent = React.createFactory(HtmlComponent);
-var FluxibleComponent = require('fluxible-addons-react/FluxibleComponent');
-import createLocation from 'history/lib/createLocation'
-import { Router, RoutingContext, match } from 'react-router'
-import routes from 'configs/Routes'
-import { renderToString } from 'react'
 
+import Routes from 'configs/Routes'
+const htmlComponent = React.createFactory(HtmlComponent);
 
 // Process
 const env = process.env.NODE_ENV;
@@ -48,87 +47,35 @@ server.use((req, res, next) => {
   let location = createLocation(req.url)
   let context = app.createContext();
   const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
+  const routes = createRoutes(Routes);
 
   match({ routes, location }, (error, redirectLocation, renderProps) => {
-    let contextProps = renderProps;
-    contextProps.createElement = function(component, props) {
-      console.log(component);
-      return React.createElement(component, Object.assign(props, {context: context.getComponentContext()}));
-    };
+    if (redirectLocation) {
+      res.redirect(301, redirectLocation.pathname + redirectLocation.search)
+    }
+    else if (error) {
+      res.send(500, error.message)
+    }
+    else if (renderProps == null) {
+      res.send(404, 'Not found')
+    }
+    else{
+      const html = React.renderToStaticMarkup(htmlComponent({
+        clientFile: env === 'production' ? 'main.min.js' : 'main.js',
+        styleFile: env === 'production' ? 'main.css' : 'main.css',
+        context: context.getComponentContext(),
+        state: exposed,
+        markup: React.renderToString(
+          <FluxibleComponent context={context.getComponentContext()}>
+            <RoutingContext {...renderProps} />
+          </FluxibleComponent>
+        )
+      }));
 
-    // console.log(renderProps);
-    // console.log(context.getComponentContext());
-    console.log(contextProps);
-    const html = React.renderToStaticMarkup(htmlComponent({
-      clientFile: env === 'production' ? 'main.min.js' : 'main.js',
-      context: context.getComponentContext(),
-      state: exposed,
-      markup: renderToString(
-        <FluxibleComponent context={context.getComponentContext()}>
-          <RoutingContext {...contextProps} />
-        </FluxibleComponent>
-      )
-    }));
-
-    res.send(html);
-    res.end();
+      res.send(html);
+      res.end();
+    }
   });
-  // let context = app.createContext();
-  // Router.run(app.getComponent(), req.path, function (Handler, state) {
-    // context.getActionContext().executeAction(navigateAction, state, function() {
-      // debug('Exposing context state');
-      // const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
-
-  //     debug('Rendering Application component into html');
-  //     var Component = React.createFactory(Handler);
-  //
-  //     const html = React.renderToStaticMarkup(htmlComponent({
-  //       clientFile: env === 'production' ? 'main.min.js' : 'main.js',
-  //       context: context.getComponentContext(),
-  //       state: exposed,
-  //       markup: React.renderToString(
-  //         React.createElement(
-  //           FluxibleComponent,
-  //           { context: context.getComponentContext() },
-  //           Component()
-  //         )
-  //       )
-  //     }));
-  //       // markup: React.renderToString(createElementWithContext(context))
-  //     debug('Sending markup');
-  //     res.type('html');
-  //     res.write('<!DOCTYPE html>' + html);
-  //     res.end();
-  //   });
-  // });
-
-  // debug('Executing navigate action');
-  // context.getActionContext().executeAction(navigateAction, {
-  //     url: req.url
-  // }, (err) => {
-  //     if (err) {
-  //         if (err.statusCode && err.statusCode === 404) {
-  //             next();
-  //         } else {
-  //             next(err);
-  //         }
-  //         return;
-  //     }
-  //
-  //
-  //     debug('Rendering Application component into html');
-  //     const html = React.renderToStaticMarkup(htmlComponent({
-  //         clientFile: env === 'production' ? 'main.min.js' : 'main.js',
-  //         context: context.getComponentContext(),
-  //         state: exposed,
-  //         markup: React.renderToString(createElementWithContext(context))
-  //     }));
-  //
-  //     debug('Sending markup');
-  //     res.type('html');
-  //     res.write('<!DOCTYPE html>' + html);
-  //     res.end();
-  // });
 });
 
 const port = process.env.PORT || 3000;

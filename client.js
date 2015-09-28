@@ -8,9 +8,11 @@ import Router from 'react-router';
 var HistoryLocation = Router.HistoryLocation;
 var navigateAction = require('actions/navigate');
 var FluxibleComponent = require('fluxible-addons-react/FluxibleComponent');
+var Routes = require('configs/Routes');
 
 const debugClient = debug('new-pirate');
 const dehydratedState = window.App; // Sent from the server
+const mountNode = document.getElementById('app');
 
 window.React = React; // For chrome dev tool support
 
@@ -36,40 +38,38 @@ debugClient('rehydrating app');
 //     );
 // });
 function RenderApp(context, Handler){
-    debugClient('React Rendering');
-    var mountNode = document.getElementById('app');
-    var Component = React.createFactory(Handler);
-    React.render(
-        React.createElement(
-            FluxibleComponent,
-            { context: context.getComponentContext() },
-            Component()
-        ),
-        mountNode,
-        function () {
-            debugClient('React Rendered');
-        }
-    );
+  debugClient('React Rendering');
+  var mountNode = document.getElementById('app');
+  var Component = React.createFactory(Handler);
+  React.render(
+    React.createElement(
+      FluxibleComponent,
+      {context: context.getComponentContext()},
+      Component()
+    ),
+    mountNode,
+    function () {
+      debugClient('React Rendered');
+    }
+  );
 }
 
 app.rehydrate(dehydratedState, function (err, context) {
-    if (err) {
-        throw err;
-    }
-    window.context = context;
+  if (err) {
+    throw err;
+  }
+  window.context = context;
 
-    var firstRender = true;
-    Router.run(app.getComponent(), HistoryLocation, function (Handler, state) {
-        if (firstRender) {
-            // Don't call the action on the first render on top of the server rehydration
-            // Otherwise there is a race condition where the action gets executed before
-            // render has been called, which can cause the checksum to fail.
-            RenderApp(context, Handler);
-            firstRender = false;
-        } else {
-            context.executeAction(navigateAction, state, function () {
-                RenderApp(context, Handler);
-            });
-        }
-    });
+
+  React.render(
+    React.createElement(
+      FluxibleComponent,
+      {context: context.getComponentContext()},
+      Routes
+    ),
+    mountNode,
+    function () {
+      debugClient('React Rendered');
+    }
+  );
 });

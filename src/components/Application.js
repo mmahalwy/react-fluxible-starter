@@ -7,7 +7,6 @@ import React from 'react';
 import Nav from './Nav';
 import ApplicationStore from '../stores/ApplicationStore';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
-import {RouteHandler} from 'react-router';
 
 
 class Application extends React.Component {
@@ -15,7 +14,7 @@ class Application extends React.Component {
     return (
       <div>
         <Nav selected={this.props.currentPageName} links={this.props.pages} />
-        <RouteHandler />
+        {this.props.children}
       </div>
     );
   }
@@ -29,7 +28,9 @@ class Application extends React.Component {
   }
 }
 
-export default provideContext(connectToStores(
+Application.displayName = 'Application';
+
+export default connectToStores(
   Application,
   [ApplicationStore],
   function (context, props) {
@@ -40,4 +41,4 @@ export default provideContext(connectToStores(
       pages: appStore.getPages()
     };
   }
-));
+);
