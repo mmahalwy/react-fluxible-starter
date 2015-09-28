@@ -1,4 +1,7 @@
 /*globals document*/
+if (process.env.BROWSER === true) {
+  require('styles/app.scss');
+}
 
 import React from 'react';
 import Nav from './Nav';

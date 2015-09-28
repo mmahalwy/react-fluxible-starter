@@ -22,8 +22,8 @@ var webpackConfig = {
     './client.js'
   ],
   output: {
-    path: path.resolve('./build/js'),
-    publicPath: '/public/js/',
+    path: path.resolve('./build'),
+    publicPath: '/public/',
     filename: 'main.js'
   },
   module: {

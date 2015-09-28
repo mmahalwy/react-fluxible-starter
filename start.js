@@ -1,3 +1,5 @@
+process.env.BROWSER = false;
+
 require('app-module-path').addPath(__dirname);
 require('app-module-path').addPath('./src');
 
