@@ -4,18 +4,23 @@ import { Link } from 'react-router';
 class Nav extends React.Component {
   render() {
     return (
-      <ul className="pure-menu pure-menu-open pure-menu-horizontal">
-        <li>
-          <Link to="/about">
-            About
-          </Link>
-        </li>
-        <li>
-          <Link to="/">
-            Home
-          </Link>
-        </li>
-      </ul>
+      <div className="navbar">
+        <div className="container">
+          <ul className="navigation-left navbar-list">
+            <li>
+              <Link to="/" className="logo">
+              </Link>
+            </li>
+          </ul>
+          <ul className="navigation-right navbar-list">
+            <li>
+              <Link to="/about" style={{color: '#fff'}}>
+                About
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
     );
   }
 }

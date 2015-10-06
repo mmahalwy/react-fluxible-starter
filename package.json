@@ -41,12 +41,14 @@
     "css-loader": "^0.19.0",
     "eslint": "^1.5.1",
     "eslint-loader": "^1.0.0",
+    "file-loader": "^0.8.4",
     "json-loader": "^0.5.1",
     "node-sass": "^3.3.3",
     "nodemon": "^1.2.1",
     "react-hot-loader": "^1.2.8",
-    "sass-loader": "^2.0.1",
+    "sass-loader": "^3.0.0",
     "style-loader": "^0.12.4",
+    "url-loader": "^0.5.6",
     "webpack": "^1.4.12",
     "webpack-dev-server": "^1.6.5"
   }

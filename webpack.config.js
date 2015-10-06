@@ -1,6 +1,5 @@
 var webpack = require('webpack');
 var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var webpackConfig = {
   resolve: {
@@ -38,11 +37,7 @@ var webpackConfig = {
       },
       { test: /\.json$/, loader: 'json-loader'},
       { test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader',
-          'css!autoprefixer!sass?outputStyle=expanded&' +
-            "includePaths[]=" +
-              (path.resolve(__dirname, "./node_modules"))
-        )
+        loaders: [ 'style', 'css?sourceMap', 'sass?sourceMap' ]
       }
     ]
   },
@@ -54,11 +49,9 @@ var webpackConfig = {
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        'BROWSER': true
       }
-    }),
-    new ExtractTextPlugin("[name].css", {
-      allChunks: true
     })
   ],
   stats: {

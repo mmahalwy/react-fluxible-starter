@@ -1,5 +1,5 @@
 /*globals document*/
-if (process.env.BROWSER === true) {
+if (process.env.BROWSER) {
   require('styles/app.scss');
 }
 
@@ -7,7 +7,6 @@ import React from 'react';
 import Nav from './Nav';
 import ApplicationStore from '../stores/ApplicationStore';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
-
 
 class Application extends React.Component {
   render() {

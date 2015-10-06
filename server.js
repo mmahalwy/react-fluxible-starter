@@ -4,7 +4,7 @@
 * based on the URL. Once completed, the store state is dehydrated
 * and the application is rendered via React.
 */
-
+delete process.env.BROWSER;
 // Express
 import express from 'express';
 import compression from 'compression';

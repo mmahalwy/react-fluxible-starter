@@ -1,11 +1,11 @@
-process.env.BROWSER = false;
+delete process.env.BROWSER;
 
 require('app-module-path').addPath(__dirname);
 require('app-module-path').addPath('./src');
 
 require("babel/register")({
 	stage: 0,
-	plugins: ["typecheck"]
+	ignore: /\.scss$/
 });
 
 global.__CLIENT__ = false;
