@@ -1,7 +1,18 @@
 var webpack = require('webpack');
 var path = require('path');
 
+var Webpack_isomorphic_tools_plugin = require('webpack-isomorphic-tools/plugin')
+
+var webpack_isomorphic_tools_plugin =
+  // webpack-isomorphic-tools settings reside in a separate .js file
+  // (because they will be used in the web server code too).
+  new Webpack_isomorphic_tools_plugin(require('./webpack-isomorphic-tools-configuration'))
+  // also enter development mode since it's a development webpack configuration
+  // (see below for explanation)
+  .development()
+
 var webpackConfig = {
+  context: path.join(process.env.PWD, './'),
   resolve: {
     extensions: ['', '.js', '.jsx'],
     alias: {
@@ -53,7 +64,8 @@ var webpackConfig = {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
         'BROWSER': true
       }
-    })
+    }),
+    webpack_isomorphic_tools_plugin
   ],
   stats: {
     colors: true,

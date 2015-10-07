@@ -1,0 +1,21 @@
+{
+  "javascript": {
+    "main": "/public/main.js"
+  },
+  "styles": {},
+  "images": {},
+  "style_modules": {
+    "./src/styles/Nav.scss": {
+      "navbar": "_2w3czFfdTWZyFcwNulIcT0",
+      "navbarList": "cght_uv7RqNK7iv5CbPK6",
+      "navigationLeft": "wc5OaAAEVLs1-dXXLw68p",
+      "navigationRight": "_3pb8_F3Bmq01BPTsCJP7vZ",
+      "logo": "_3_A4F9erOZihWdDSiggB_Y"
+    },
+    "./src/styles/Home.scss": {
+      "homePicture": "_11ixJAAU3s13bu88eUP1nR",
+      "heroCopy": "_2HPXV7q8PMMlzOqbDqoiFn"
+    },
+    "./src/styles/app.scss": {}
+  }
+}

@@ -5,7 +5,7 @@
   "main": "start.js",
   "scripts": {
     "build": "webpack & webpack --config webpack.config.production.js",
-    "dev": "node webpack-dev-server.js & PORT=3001 nodemon start.js -e js,jsx",
+    "dev": "NODE_ENV=developement node webpack-dev-server.js & PORT=3001 NODE_ENV=developement nodemon start.js -e js,jsx",
     "lint": "eslint ./*.js ./**/*.js",
     "start": "node start.js"
   },
@@ -31,7 +31,8 @@
     "react": "^0.13.0",
     "react-router": "1.0.0-rc1",
     "serialize-javascript": "^1.0.0",
-    "serve-favicon": "^2.1.6"
+    "serve-favicon": "^2.1.6",
+    "webpack-isomorphic-tools": "^0.9.1"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",

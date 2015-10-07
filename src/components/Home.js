@@ -1,11 +1,13 @@
 import React from 'react';
 
+const style = require('styles/Home.scss');
+
 class Home extends React.Component {
   render() {
     return (
       <div>
-        <div className="home-picture">
-          <div className="hero-copy">
+        <div className={style.homePicture}>
+          <div className={style.heroCopy}>
             <h1>Find the Best Things to Do</h1>
             <h2>Choose from <strong>Thousands</strong> of Activities in <strong>20+</strong> </h2>
           </div>

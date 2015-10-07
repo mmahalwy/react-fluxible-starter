@@ -1,0 +1,36 @@
+:local(.navbar){
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  min-height: 50px;
+  z-index: 99999;
+
+  :local(.navbarList){
+    margin: 0px;
+    list-style: none;
+
+    & > li{
+      display: inline-block;
+    }
+  }
+
+  :local(.navigationLeft){
+    float: left;
+  }
+  :local(.navigationRight){
+    float: right;
+  }
+
+  :local(.logo){
+    background: #fcf31b url(https://dxvgidz67iahm.cloudfront.net/assets/shared/peek_sprite-b8742934f259f891efd2b0423e07ddff.png) no-repeat 10px 64px;
+    display: inline-block;
+    width: 115px;
+    height: 125px;
+    position: absolute;
+    top: -10px;
+    // left: 40px;
+    box-shadow: 2px 2px 5px rgba(10,10,10,0.2);
+    padding: initial;
+  }
+}

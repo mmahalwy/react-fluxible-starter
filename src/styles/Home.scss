@@ -1,0 +1,26 @@
+:local .homePicture{
+  width: 100%;
+  height: calc(70%);
+  margin-top: -50px;
+  background: url(https://dxvgidz67iahm.cloudfront.net/assets/home/v3/home_5-b503fa06946ca43bd500ee71917e7306.jpg) no-repeat;
+  background-size: cover;
+  position: relative;
+
+  .heroCopy{
+    position: absolute;
+    bottom: 2em;
+    left: 2em;
+    z-index: 9;
+    font-family: SofiaProLight,"Helvetica Neue","Helvetica",Arial,sans-serif;
+    color: white;
+    background-color: black;
+    background-color: rgba(0,0,0,0.4);
+    font-size: .9em;
+    padding: 1em;
+
+    strong{
+      color: #fcf31b;
+      font-weight: normal;
+    }
+  }
+}

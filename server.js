@@ -41,6 +41,10 @@ server.use(logger('dev'));
 
 // Initial route
 server.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'development') {
+    webpack_isomorphic_tools.refresh()
+  }
+
   let location = createLocation(req.url)
   let context = app.createContext();
   const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
@@ -58,8 +62,7 @@ server.use((req, res, next) => {
     }
     else{
       const html = React.renderToStaticMarkup(htmlComponent({
-        clientFile: env === 'production' ? 'main.min.js' : 'main.js',
-        styleFile: env === 'production' ? 'main.css' : 'main.css',
+        assets: webpack_isomorphic_tools.assets(),
         context: context.getComponentContext(),
         state: exposed,
         markup: React.renderToString(
