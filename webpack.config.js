@@ -22,12 +22,12 @@ var webpackConfig = {
       'stores': __dirname + '/src/stores',
       'constants': __dirname + '/src/constants',
       'mixins': __dirname + '/src/mixins',
-      'configs': __dirname + '/src/configs',
+      'config': __dirname + '/src/config',
       'utils': __dirname + '/src/utils'
     }
   },
   entry: [
-    'webpack-dev-server/client?http://localhost:3000',
+    'webpack-dev-server/client?http://localhost:3002',
     'webpack/hot/only-dev-server',
     './client.js'
   ],
@@ -74,7 +74,13 @@ var webpackConfig = {
   devtool: 'source-map',
   keepalive: true,
   debug: true,
-  cache: true
+  cache: true,
+  node: {
+    console: true,
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  }
 };
 // The reason this is here and NOT in .babelrc like it should is because our
 // nodejs server picks up babel too and isn't happy with this!

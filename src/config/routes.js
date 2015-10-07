@@ -1,7 +1,7 @@
 import React from 'react';
 import { IndexRoute, Route, Router } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory'
-import { connectToStores, provideContext } from 'fluxible-addons-react';
+import { connectToStores, provideContext, FluxibleContext } from 'fluxible-addons-react';
 
 import Application from 'components/Application';
 import Home from 'components/Home';
@@ -16,7 +16,16 @@ if (typeof window !== 'undefined') {
 
 function createElement(Component, props) {
   // Could add custom props here!
-  return <Component {...props} />
+  if (Component.preRender) {
+    const action = Component.preRender();
+
+    context.executeAction(action.action, action.payload ? action.payload : null, function() {
+      return <Component {...props} />;
+    });
+  }
+
+  return <Component {...props} />;
+
 }
 
 const routes = (

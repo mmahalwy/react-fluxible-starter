@@ -1,17 +1,7 @@
-/**
-* This leverages Express to create and run the http server.
-* A Fluxible context is created and executes the navigateAction
-* based on the URL. Once completed, the store state is dehydrated
-* and the application is rendered via React.
-*/
-delete process.env.BROWSER;
 // Express
 import express from 'express';
-import compression from 'compression';
-import bodyParser from 'body-parser';
-import path from 'path';
 import serialize from 'serialize-javascript';
-import logger from 'morgan';
+import expressConfig from 'server/config/express';
 
 // React
 import React from 'react';
@@ -23,7 +13,7 @@ import { Router, RoutingContext, match, createRoutes } from 'react-router'
 import app from './app';
 import navigateAction from 'actions/navigate';
 import HtmlComponent from 'components/Html';
-import Routes from 'configs/Routes'
+import Routes from 'config/Routes'
 const htmlComponent = React.createFactory(HtmlComponent);
 
 // Process
@@ -33,11 +23,22 @@ const debug = debugLib('new-pirate');
 
 // Server setup
 const server = express();
-server.use('/public', express.static(path.join(__dirname, '/build')));
-server.use('/images', express.static(path.join(__dirname, '/static/images')));
-server.use(compression());
-server.use(bodyParser.json());
-server.use(logger('dev'));
+expressConfig(server);
+
+const preRenderData = function(components, context, callback) {
+  const preRenderComponent = components.find(component => {return component && !!component.preRender});
+
+  if (!preRenderComponent) {
+    return callback && callback();
+  }
+
+  let action = preRenderComponent.preRender();
+
+  // TODO: Need to allow for the params to be passed to the actions.
+  context.executeAction(action.action, action.payload ? action.payload : null, function() {
+    return callback && callback();
+  });
+};
 
 // Initial route
 server.use((req, res, next) => {
@@ -46,11 +47,10 @@ server.use((req, res, next) => {
   }
 
   let location = createLocation(req.url)
-  let context = app.createContext();
-  const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
   const routes = createRoutes(Routes);
 
   match({ routes, location }, (error, redirectLocation, renderProps) => {
+    debug('Route matched');
     if (redirectLocation) {
       res.redirect(301, redirectLocation.pathname + redirectLocation.search)
     }
@@ -61,24 +61,34 @@ server.use((req, res, next) => {
       res.send(404, 'Not found')
     }
     else{
-      const html = React.renderToStaticMarkup(htmlComponent({
-        assets: webpack_isomorphic_tools.assets(),
-        context: context.getComponentContext(),
-        state: exposed,
-        markup: React.renderToString(
-          <FluxibleComponent context={context.getComponentContext()}>
-            <RoutingContext {...renderProps} />
-          </FluxibleComponent>
-        )
-      }));
+      debug('Pre-render data fetch');
+      let context = app.createContext();
 
-      res.send(html);
-      res.end();
+      preRenderData(renderProps.components, context, function() {
+        debug('Pre-render data fetch completed');
+
+        // This is where the magic happens, we dehydrate the stores to pass to the client.
+        const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
+        const html = React.renderToStaticMarkup(htmlComponent({
+          assets: webpack_isomorphic_tools.assets(),
+          context: context.getComponentContext(),
+          state: exposed,
+          markup: React.renderToString(
+            <FluxibleComponent context={context.getComponentContext()}>
+              <RoutingContext {...renderProps} />
+            </FluxibleComponent>
+          )
+        }));
+
+        debug('Rendering to html');
+        res.send(html);
+        res.end();
+      });
     }
   });
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 server.listen(port);
 console.log('Application listening on port ' + port);
 

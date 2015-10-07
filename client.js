@@ -8,7 +8,7 @@ import FluxibleComponent from 'fluxible-addons-react/FluxibleComponent';
 
 import app from './app';
 import navigateAction from 'actions/navigate';
-import Routes from 'configs/Routes';
+import Routes from 'config/Routes';
 
 const debugClient = debug('new-pirate');
 const dehydratedState = window.App; // Sent from the server
