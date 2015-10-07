@@ -30,10 +30,11 @@ var webpackConfig = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loaders: [
-          require.resolve('react-hot-loader'),
-          require.resolve('babel-loader')
-        ]
+        loader: 'babel',
+        query: {
+          stage: 0,
+          plugins: []
+        }
       },
       { test: /\.json$/, loader: 'json-loader'},
       { test: /\.scss$/,
@@ -62,6 +63,22 @@ var webpackConfig = {
   keepalive: true,
   debug: true,
   cache: true
+};
+// The reason this is here and NOT in .babelrc like it should is because our
+// nodejs server picks up babel too and isn't happy with this!
+webpackConfig.module.loaders[0].query.plugins.push('react-transform');
+webpackConfig.module.loaders[0].query.extra = {
+  'react-transform': {
+    transforms: [{
+      transform: 'react-transform-hmr',
+      imports: ['react'],
+      locals: ['module']
+    },
+    {
+      "transform": "react-transform-catch-errors",
+      "imports": ["react", "redbox-react"]
+    }]
+  }
 };
 
 module.exports = webpackConfig;
