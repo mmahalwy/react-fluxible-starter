@@ -14,6 +14,14 @@ class Home extends React.Component {
     super(props, context);
   }
 
+  renderButton() {
+    if (this.props.experiments.showButton) {
+      return (
+        <Button />
+      )
+    }
+  }
+
   renderIteneraryBlocks() {
     return this.props.iteneraries.map(itenerary => {
       return <IteneraryBlock itenerary={itenerary} />
@@ -29,7 +37,7 @@ class Home extends React.Component {
           <div className={style.heroCopy}>
             <h1>Find the Best Things to Do</h1>
             <h2>Choose from <strong>Thousands</strong> of Activities in <strong>20+</strong> </h2>
-            <Button />
+            {this.renderButton()}
           </div>
         </div>
         <div className="container">
