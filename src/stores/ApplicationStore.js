@@ -1,22 +1,20 @@
 import BaseStore from 'fluxible/addons/BaseStore';
-import routesConfig from '../configs/routes';
-import RouteStore from './RouteStore';
 
 class ApplicationStore extends BaseStore {
     constructor(dispatcher) {
         super(dispatcher);
         this.currentPageName = null;
         this.currentPage = null;
-        this.pages = routesConfig;
+        // this.pages = routesConfig;
         this.pageTitle = '';
     }
     handlePageTitle(currentRoute) {
-        this.dispatcher.waitFor(RouteStore, () => {
-            if (currentRoute && currentRoute.get('title')) {
-                this.pageTitle = currentRoute.get('title');
-                this.emitChange();
-            }
-        });
+      if (this.currentRoute && route.path === this.currentRoute.path) {
+        return;
+      }
+
+      this.currentRoute = route;
+      this.emitChange();
     }
     getCurrentPageName() {
         return this.currentPageName;
@@ -45,7 +43,7 @@ class ApplicationStore extends BaseStore {
 
 ApplicationStore.storeName = 'ApplicationStore';
 ApplicationStore.handlers = {
-    'NAVIGATE_SUCCESS': 'handlePageTitle'
+    'CHANGE_ROUTE': 'handlePageTitle'
 };
 
 export default ApplicationStore;

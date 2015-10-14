@@ -11,4 +11,6 @@ class About extends React.Component {
   }
 }
 
+About.displayName = 'About';
+
 export default About;

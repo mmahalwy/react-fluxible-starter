@@ -1,24 +1,20 @@
-/**
- * This leverages Express to create and run the http server.
- * A Fluxible context is created and executes the navigateAction
- * based on the URL. Once completed, the store state is dehydrated
- * and the application is rendered via React.
- */
-
 // Express
 import express from 'express';
-import compression from 'compression';
-import bodyParser from 'body-parser';
-import path from 'path';
 import serialize from 'serialize-javascript';
-import logger from 'morgan';
+import expressConfig from 'server/config/express';
 
 // React
 import React from 'react';
-import {navigateAction} from 'fluxible-router';
-import app from './app';
-import HtmlComponent from 'components/Html';
 import { createElementWithContext } from 'fluxible-addons-react';
+import FluxibleComponent from 'fluxible-addons-react/FluxibleComponent';
+import createLocation from 'history/lib/createLocation'
+import { Router, RoutingContext, match, createRoutes } from 'react-router'
+
+import app from './app';
+import navigateAction from 'actions/navigate';
+import HtmlComponent from 'components/Html';
+import Routes from 'config/Routes'
+import createElement from 'utils/createElement';
 const htmlComponent = React.createFactory(HtmlComponent);
 
 // Process
@@ -28,49 +24,74 @@ const debug = debugLib('new-pirate');
 
 // Server setup
 const server = express();
-server.use('/public', express.static(path.join(__dirname, '/build')));
-server.use('/images', express.static(path.join(__dirname, '/static/images')));
-server.use(compression());
-server.use(bodyParser.json());
-server.use(logger('dev'));
+expressConfig(server);
+
+const preRenderData = function(components, context, callback) {
+  const preRenderComponent = components.find(component => {return component && !!component.preRender});
+
+  if (!preRenderComponent) {
+    return callback && callback();
+  }
+
+  let action = preRenderComponent.preRender();
+
+  // TODO: Need to allow for the params to be passed to the actions.
+  context.executeAction(action.action, action.payload ? action.payload : null, function() {
+    return callback && callback();
+  });
+};
 
 // Initial route
 server.use((req, res, next) => {
-    let context = app.createContext();
+  if (process.env.NODE_ENV === 'development') {
+    webpack_isomorphic_tools.refresh()
+  }
 
-    debug('Executing navigate action');
-    context.getActionContext().executeAction(navigateAction, {
-        url: req.url
-    }, (err) => {
-        if (err) {
-            if (err.statusCode && err.statusCode === 404) {
-                next();
-            } else {
-                next(err);
-            }
-            return;
-        }
+  let location = createLocation(req.url)
+  const routes = createRoutes(Routes(app.createContext()));
 
-        debug('Exposing context state');
+  match({ routes, location }, (error, redirectLocation, renderProps) => {
+    debug('Route matched');
+    if (redirectLocation) {
+      res.redirect(301, redirectLocation.pathname + redirectLocation.search)
+    }
+    else if (error) {
+      res.send(500, error.message)
+    }
+    else if (renderProps == null) {
+      res.send(404, 'Not found')
+    }
+    else{
+      debug('Pre-render data fetch');
+      let context = app.createContext();
+
+      preRenderData(renderProps.components, context, function() {
+        debug('Pre-render data fetch completed');
+        console.log(RoutingContext);
+        console.log(renderProps);
+        // This is where the magic happens, we dehydrate the stores to pass to the client.
         const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
-
-        debug('Rendering Application component into html');
         const html = React.renderToStaticMarkup(htmlComponent({
-            clientFile: env === 'production' ? 'main.min.js' : 'main.js',
-            styleFile: env === 'production' ? 'main.min.css' : 'main.css',
-            context: context.getComponentContext(),
-            state: exposed,
-            markup: React.renderToString(createElementWithContext(context))
+          assets: webpack_isomorphic_tools.assets(),
+          context: context.getComponentContext(),
+          state: exposed,
+          markup: React.renderToString(
+            Routes(context)
+            // <FluxibleComponent context={context.getComponentContext()}>
+            //   <RoutingContext {...renderProps} />
+            // </FluxibleComponent>
+          )
         }));
 
-        debug('Sending markup');
-        res.type('html');
-        res.write('<!DOCTYPE html>' + html);
+        debug('Rendering to html');
+        res.send(html);
         res.end();
-    });
+      });
+    }
+  });
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 server.listen(port);
 console.log('Application listening on port ' + port);
 

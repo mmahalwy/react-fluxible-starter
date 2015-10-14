@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var webpackConfig = {
   resolve: {
@@ -22,7 +23,14 @@ var webpackConfig = {
           require.resolve('babel-loader')
         ]
       },
-      { test: /\.json$/, loader: 'json-loader'}
+      { test: /\.json$/, loader: 'json-loader'},
+      { test: /\.scss$/,
+        loader: ExtractTextPlugin.extract('style-loader',
+          'css!autoprefixer!sass?outputStyle=expanded&' +
+            "includePaths[]=" +
+              (path.resolve(__dirname, "./node_modules"))
+        )
+      }
     ]
   },
   node: {
@@ -39,6 +47,9 @@ var webpackConfig = {
       compress: {
         warnings: false
       }
+    }),
+    new ExtractTextPlugin("[name].css", {
+      allChunks: true
     })
   ],
   devtool: 'source-map'
