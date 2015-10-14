@@ -12,6 +12,7 @@ class SurahsStore extends BaseStore {
   }
 
   dehydrate() {
+    console.log(this.surahs);
     return {
       surahs: this.surahs
     };
@@ -25,7 +26,6 @@ SurahsStore.storeName = 'SurahsStore';
 
 SurahsStore.handlers = {
   surahsReceived(surahs) {
-    // console.log(surahs);
     this.surahs = surahs;
     this.emitChange();
   }

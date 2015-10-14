@@ -6,7 +6,6 @@ export const getSurahs = function(actionContext, payload, done) {
   }
 
   return request('http://localhost:3002/api/surahs', (error, response, body) => {
-    console.log('called!!!');
     actionContext.dispatch('surahsReceived', JSON.parse(body));
     done();
   })
