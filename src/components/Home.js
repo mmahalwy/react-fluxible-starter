@@ -1,13 +1,12 @@
 import React from 'react';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
 
-import * as IteneraryActions from 'actions/Itenerary';
+import * as SurahsAction from 'actions/Surahs';
 
-import IteneraryStore from 'stores/IteneraryStore';
+import SurahsStore from 'stores/SurahsStore';
 import PeekExperimentsStore from 'stores/PeekExperimentsStore';
 
 import Button from 'components/Button';
-import IteneraryBlock from 'components/IteneraryBlock';
 
 class Home extends React.Component {
   constructor(props, context) {
@@ -22,9 +21,9 @@ class Home extends React.Component {
     }
   }
 
-  renderIteneraryBlocks() {
-    return this.props.iteneraries.map(itenerary => {
-      return <IteneraryBlock itenerary={itenerary} />
+  renderSurahs() {
+    return this.props.surahs.map(surah => {
+      return surah;
     });
   }
 
@@ -41,7 +40,7 @@ class Home extends React.Component {
           </div>
         </div>
         <div className="container">
-          {this.renderIteneraryBlocks()}
+          {this.renderSurahs()}
         </div>
       </div>
     );
@@ -49,18 +48,18 @@ class Home extends React.Component {
 }
 
 Home.preRender = function() {
-  return {action: IteneraryActions.getItenerary}
+  return {action: SurahsAction.getSurahs}
 };
 
 
 export default connectToStores(
   Home,
-  [IteneraryStore, PeekExperimentsStore],
+  [SurahsStore, PeekExperimentsStore],
   function (context, props) {
-    var iteneraryStore = context.getStore(IteneraryStore);
+    var surahsStore = context.getStore(SurahsStore);
     var peekExperimentStore = context.getStore(PeekExperimentsStore);
     return {
-      iteneraries: iteneraryStore.getIteneraries(),
+      surahs: surahsStore.getSurahs(),
       experiments: peekExperimentStore.getExperiments()
     };
   }

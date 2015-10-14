@@ -7,7 +7,7 @@ export default function(server) {
 
   // server.use('/auth', require('./auth'));
 
-  server.use('/api/iteneraries', require('./api/iteneraries'));
+  server.use('/api/surahs', require('./api/surahs'));
   // All undefined asset or api routes should return a 404
   // server.route('/:url(api|auth|components|app|bower_components|assets)/*')
   //  .get(errors[404]);

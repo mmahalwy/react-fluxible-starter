@@ -3,7 +3,7 @@ import Application from 'components/Application';
 import Routes from 'config/Routes';
 import ApplicationStore from 'stores/ApplicationStore';
 import PeekExperimentsStore from 'stores/PeekExperimentsStore';
-import IteneraryStore from 'stores/IteneraryStore';
+import SurahsStore from 'stores/SurahsStore';
 
 // create new fluxible instance
 const app = new Fluxible({});
@@ -11,6 +11,6 @@ const app = new Fluxible({});
 // register stores
 app.registerStore(ApplicationStore);
 app.registerStore(PeekExperimentsStore);
-app.registerStore(IteneraryStore);
+app.registerStore(SurahsStore);
 
 module.exports = app;

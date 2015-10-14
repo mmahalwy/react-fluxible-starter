@@ -14,6 +14,7 @@ import app from './app';
 import navigateAction from 'actions/navigate';
 import HtmlComponent from 'components/Html';
 import Routes from 'config/Routes'
+import createElement from 'utils/createElement';
 const htmlComponent = React.createFactory(HtmlComponent);
 
 // Process
@@ -47,7 +48,7 @@ server.use((req, res, next) => {
   }
 
   let location = createLocation(req.url)
-  const routes = createRoutes(Routes);
+  const routes = createRoutes(Routes(app.createContext()));
 
   match({ routes, location }, (error, redirectLocation, renderProps) => {
     debug('Route matched');
@@ -66,7 +67,8 @@ server.use((req, res, next) => {
 
       preRenderData(renderProps.components, context, function() {
         debug('Pre-render data fetch completed');
-
+        console.log(RoutingContext);
+        console.log(renderProps);
         // This is where the magic happens, we dehydrate the stores to pass to the client.
         const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
         const html = React.renderToStaticMarkup(htmlComponent({
@@ -74,9 +76,10 @@ server.use((req, res, next) => {
           context: context.getComponentContext(),
           state: exposed,
           markup: React.renderToString(
-            <FluxibleComponent context={context.getComponentContext()}>
-              <RoutingContext {...renderProps} />
-            </FluxibleComponent>
+            Routes(context)
+            // <FluxibleComponent context={context.getComponentContext()}>
+            //   <RoutingContext {...renderProps} />
+            // </FluxibleComponent>
           )
         }));
 

@@ -31,11 +31,7 @@ app.rehydrate(dehydratedState, function (err, context) {
   window.context = context;
 
   React.render(
-    React.createElement(
-      FluxibleComponent,
-      {context: context.getComponentContext()},
-      Routes
-    ),
+    Routes(context),
     mountNode,
     function () {
       debugClient('React Rendered');
