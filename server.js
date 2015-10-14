@@ -53,13 +53,13 @@ server.use((req, res, next) => {
   match({ routes, location }, (error, redirectLocation, renderProps) => {
     debug('Route matched');
     if (redirectLocation) {
-      res.redirect(301, redirectLocation.pathname + redirectLocation.search)
+      res.status(301).redirect(redirectLocation.pathname + redirectLocation.search)
     }
     else if (error) {
-      res.send(500, error.message)
+      res.status(500).send(error.message)
     }
     else if (renderProps == null) {
-      res.send(404, 'Not found')
+      res.status(404).send('Not found')
     }
     else{
       debug('Pre-render data fetch');
@@ -71,6 +71,8 @@ server.use((req, res, next) => {
           <RoutingContext {...renderProps} createElement={createElement(context)}/>
         );
 
+        console.log(markup);
+
         const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
         const html = React.renderToStaticMarkup(htmlComponent({
           assets: webpack_isomorphic_tools.assets(),
@@ -80,7 +82,7 @@ server.use((req, res, next) => {
         }));
 
         debug('Rendering to html');
-        res.send(200, html);
+        res.status(200).send(html);
         res.end();
       // });
     }
