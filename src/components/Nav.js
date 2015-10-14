@@ -10,11 +10,14 @@ class Nav extends React.Component {
         <div className="container">
           <ul className={`${style.navigationLeft} ${style.navbarList}`}>
             <li>
-              <Link to="/" className={style.logo}>
-              </Link>
             </li>
           </ul>
           <ul className={`${style.navigationRight} ${style.navbarList}`}>
+            <li>
+              <Link to="/" className={style.logo}>
+                Home
+              </Link>
+            </li>
             <li>
               <Link to="/about" style={{color: '#fff'}}>
                 About

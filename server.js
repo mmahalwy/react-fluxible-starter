@@ -65,28 +65,24 @@ server.use((req, res, next) => {
       debug('Pre-render data fetch');
       let context = app.createContext();
 
-      preRenderData(renderProps.components, context, function() {
+      // preRenderData(renderProps.components, context, function() {
         debug('Pre-render data fetch completed');
-        console.log(RoutingContext);
-        console.log(renderProps);
-        // This is where the magic happens, we dehydrate the stores to pass to the client.
+        const markup = React.renderToString(
+          <RoutingContext {...renderProps} createElement={createElement(context)}/>
+        );
+
         const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
         const html = React.renderToStaticMarkup(htmlComponent({
           assets: webpack_isomorphic_tools.assets(),
           context: context.getComponentContext(),
           state: exposed,
-          markup: React.renderToString(
-            Routes(context)
-            // <FluxibleComponent context={context.getComponentContext()}>
-            //   <RoutingContext {...renderProps} />
-            // </FluxibleComponent>
-          )
+          markup: markup
         }));
 
         debug('Rendering to html');
-        res.send(html);
+        res.send(200, html);
         res.end();
-      });
+      // });
     }
   });
 });

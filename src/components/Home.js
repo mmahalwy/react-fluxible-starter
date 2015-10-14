@@ -13,14 +13,6 @@ class Home extends React.Component {
     super(props, context);
   }
 
-  renderButton() {
-    if (this.props.experiments.showButton) {
-      return (
-        <Button />
-      )
-    }
-  }
-
   renderSurahs() {
     return this.props.surahs.map(surah => {
       return surah;
@@ -34,9 +26,7 @@ class Home extends React.Component {
       <div>
         <div className={style.homePicture}>
           <div className={style.heroCopy}>
-            <h1>Find the Best Things to Do</h1>
-            <h2>Choose from <strong>Thousands</strong> of Activities in <strong>20+</strong> </h2>
-            {this.renderButton()}
+            <h1>This is a really cool home page</h1>
           </div>
         </div>
         <div className="container">

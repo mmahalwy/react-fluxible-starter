@@ -2,10 +2,11 @@ import React from 'react';
 
 class About extends React.Component {
   render() {
+    const style = require('styles/Home.scss');
+
     return (
-      <div>
-        <h2>About</h2>
-        <p>This is a description of the site.</p>
+      <div className={style.heroCopy}>
+        <h1>This is a really cool about page</h1>
       </div>
     );
   }
