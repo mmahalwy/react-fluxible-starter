@@ -8,7 +8,7 @@ class Button extends React.Component{
 
   render() {
     return (
-      <button onClick={this.alertMe.bind(this)}>{this.props.children}</button>
+      <button onClick={this.alertMe.bind(this)} style={this.props.style}>{this.props.children}</button>
     )
   }
 }

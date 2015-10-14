@@ -26,7 +26,10 @@ class Home extends React.Component {
       <div>
         <div className={style.homePicture}>
           <div className={style.heroCopy}>
-            <h1>This is a really cool home page</h1>
+            <h1>This is a really cool home page and Ki is here</h1>
+            <Button style={{color: 'blue'}}>
+              Hello there!
+            </Button>
           </div>
         </div>
         <div className="container">

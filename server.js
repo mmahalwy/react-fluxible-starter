@@ -65,7 +65,7 @@ server.use((req, res, next) => {
       debug('Pre-render data fetch');
       let context = app.createContext();
 
-      // preRenderData(renderProps.components, context, function() {
+      preRenderData(renderProps.components, context, function() {
         debug('Pre-render data fetch completed');
         const markup = React.renderToString(
           <RoutingContext {...renderProps} createElement={createElement(context)}/>
@@ -84,7 +84,7 @@ server.use((req, res, next) => {
         debug('Rendering to html');
         res.status(200).send(html);
         res.end();
-      // });
+      });
     }
   });
 });
