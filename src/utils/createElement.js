@@ -1,21 +1,25 @@
 import React from 'react';
 import {provideContext} from 'fluxible-addons-react';
+import debugLib from 'debug';
+const debug = debugLib('new-pirate');
 
 
 export default function (context) {
-  console.log('Create Element Block');
+  debug('Create Element Block');
   return function (Component, props) {
+    debug(context.executeAction)
     props.context = context.getComponentContext();
 
     if (Component.preRender) {
-      const action = Component.preRender();
-
-      context.executeAction(action.action, action.payload ? action.payload : null, function() {
-        console.log('Create Element Execute Action Finished');
+      debug('Has preRender ' + Component.displayName);
+      debug('Create Element Execute Action Started');
+      Component.preRender(context, props, function() {
+        debug('Create Element Execute Action Finished');
         return React.createElement(provideContext(Component), props);
       });
     }
 
+    debug('Create Element no ajax ' + Component.displayName);
     return React.createElement(provideContext(Component), props);
   };
 };

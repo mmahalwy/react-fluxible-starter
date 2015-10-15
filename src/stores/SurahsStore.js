@@ -1,4 +1,6 @@
 import BaseStore from 'fluxible/addons/BaseStore';
+import debugLib from 'debug';
+const debug = debugLib('new-pirate');
 
 class SurahsStore extends BaseStore {
   constructor(dispatcher) {
@@ -12,7 +14,6 @@ class SurahsStore extends BaseStore {
   }
 
   dehydrate() {
-    console.log(this.surahs);
     return {
       surahs: this.surahs
     };
@@ -26,6 +27,7 @@ SurahsStore.storeName = 'SurahsStore';
 
 SurahsStore.handlers = {
   surahsReceived(surahs) {
+    debug('surahsReceived')
     this.surahs = surahs;
     this.emitChange();
   }

@@ -32,11 +32,8 @@ const preRenderData = function(components, context, callback) {
   if (!preRenderComponent) {
     return callback && callback();
   }
-
-  let action = preRenderComponent.preRender();
-
   // TODO: Need to allow for the params to be passed to the actions.
-  context.executeAction(action.action, action.payload ? action.payload : null, function() {
+  preRenderComponent.preRender(context, {}, function() {
     return callback && callback();
   });
 };
@@ -62,17 +59,17 @@ server.use((req, res, next) => {
       res.status(404).send('Not found')
     }
     else{
-      debug('Pre-render data fetch');
+      // debug('Pre-render data fetch');
       let context = app.createContext();
 
       preRenderData(renderProps.components, context, function() {
-        debug('Pre-render data fetch completed');
+        debug('create markup');
         const markup = React.renderToString(
-          <RoutingContext {...renderProps} createElement={createElement(context)}/>
+          <RoutingContext {...renderProps} createElement={createElement(context)} />
         );
 
-        console.log(markup);
 
+        debug('dehydrating');
         const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
         const html = React.renderToStaticMarkup(htmlComponent({
           assets: webpack_isomorphic_tools.assets(),

@@ -8,6 +8,10 @@ import PeekExperimentsStore from 'stores/PeekExperimentsStore';
 
 import Button from 'components/Button';
 
+import debugLib from 'debug';
+const debug = debugLib('new-pirate');
+
+
 class Home extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -40,8 +44,8 @@ class Home extends React.Component {
   }
 }
 
-Home.preRender = function() {
-  return {action: SurahsAction.getSurahs}
+Home.preRender = function(context, props, cb) {
+  context.executeAction(SurahsAction.getSurahs, {}, cb);
 };
 
 
